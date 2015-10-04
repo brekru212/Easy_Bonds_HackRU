@@ -11,8 +11,8 @@ import os
 import sys
 from boto3.dynamodb.conditions import Key
 
-os.environ["AWS_ACCESS_KEY_ID"] = 'Nope'
-os.environ["AWS_SECRET_ACCESS_KEY"] = 'Nope'
+os.environ["AWS_ACCESS_KEY_ID"] = 'HaHaHa'
+os.environ["AWS_SECRET_ACCESS_KEY"] = 'HaHaHa'
 # Remember to set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in
 # the environment before running this program.
 
@@ -54,9 +54,9 @@ def years_in_review(list_of_indexs, year):
         year_in_review += slope_with_data(data_from_index['Items'])
     return year_in_review
 
-def csv_builder(countries, list_of_indexs):
+def numbers_first_csv_builder(countries, list_of_indexs):
     '''
-    builds a csv to be used
+    builds a csv to be used however the feature is the strength of that economy
     :param indexes: all the indexes of a country
     :param countries: list of countries to build csv
     :param actual_gdp_growth: a list of the actual gdp growth over the years
@@ -64,7 +64,6 @@ def csv_builder(countries, list_of_indexs):
     '''
     with open('countries.csv', 'wb') as fp:
         a = csv.writer(fp, delimiter=',')
-        world_data = []
         data = {}
         all_data = []
         for country in range(len(countries)):
@@ -82,22 +81,61 @@ def csv_builder(countries, list_of_indexs):
                 all_data.append([gdp_growth, {countries[country]:data}])
         a.writerows(all_data)
 
+def countires_first_csv_builder(countries, list_of_indexs):
+    '''
+    builds a csv to be used
+    :param indexes: all the indexes of a country
+    :param countries: list of countries to build csv
+    :param actual_gdp_growth: a list of the actual gdp growth over the years
+    :return: returns a csv with the data points
+    '''
+    with open('countries_year_rating.csv', 'wb') as fp:
+        a = csv.writer(fp, delimiter=',')
+        all_data = []
+        for country in range(len(countries)):
+            list_of_index_country = list_of_indexs[country]
+            for x in range(2005, 2013):
+                gdp_growth = years_in_review(list_of_index_country, x)
+                all_data.append([countries[country], [gdp_growth, x]])
+        a.writerows(all_data)
+
+def csv_builder(countries, list_of_indexs):
+    '''
+    builds a csv to be used however the feature is the strength of that economy
+    :param indexes: all the indexes of a country
+    :param countries: list of countries to build csv
+    :param actual_gdp_growth: a list of the actual gdp growth over the years
+    :return: returns a csv with the data points
+    '''
+    with open('year_rating_country.csv', 'wb') as fp:
+        a = csv.writer(fp, delimiter=',')
+        all_data = []
+        for country in range(len(countries)):
+            list_of_index_country = list_of_indexs[country]
+            for x in range(2005, 2013):
+                gdp_growth = years_in_review(list_of_index_country, x)
+                all_data.append([x, [gdp_growth, countries[country]]])
+        a.writerows(all_data)
+
 csv_builder(['Argentina','Australia','Brazil','Canada','China','Eurozone','France','Germany','India','Indonesia',
              'Italy','Japan','Mexico','Russia','South Africa','South Korea','Turkey','United Kingdom','United States'],
             #argentina
             [['ARADTOTQ', 'ARBABAL', 'ARBPCURR', 'ARCCIND', 'ARDMSUMM',
                                      'ARTXTOTL', 'ARWPIMOM','ARCOMOM','ARIPSAMO', 'AREMDEMO', 'ARGQPYOX',
                                      'ARVHTOTL', 'ARVSARTL'],
-             #australia
-             ['ACRDTPV', 'AUCABAL', 'AUCANXP', 'AUFRA', 'AUITGSB', 'AUNAGDPC', 'AUNAGDPY',
+
+            #australia
+            ['ACRDTPV', 'AUCABAL', 'AUCANXP', 'AUFRA', 'AUITGSB', 'AUNAGDPC', 'AUNAGDPY',
                           'AUPGOP', 'AURSTSA', 'NABSCOND', 'NABSCONF', 'AUBAC', 'AICIPCI', 'AIGISMI',
                           'AIGPMI', 'AUCNQTOT', 'AUHFILM', 'AULFPART', 'AURBA$', 'AUVHMOM%'],
-             #brazil,
+
+            #brazil,
             ['BPPICM','BRCOCMOM','BRLDDEBT','BSRFTOFD','BZASSUBT','BZCACURR','BZBGPRIM','BZCCI','BZCNCNIS','BZDPNDT%',
               'BZEAMOM%','BZFDTMON','BZLNTMOM','BZLNTOTA','BTIPTL%','BZJCGTOT','BZRTAMPM','BZRTRETM','BZTBBALM',
               'BZPBNDOM','BZPBPRDM','BZTWBALW','BZVPTLVH','BZVXETL'],
+
             #canada
-                ['CACPAMOM','CAGDPMOM','CAHUMOM','CAIPMOM','CALPPROD', 'CAMFCHNG', 'CANLPRTR','CARSCHNG','CATBTOTB',
+            ['CACPAMOM','CAGDPMOM','CAHUMOM','CAIPMOM','CALPPROD', 'CAMFCHNG', 'CANLPRTR','CARSCHNG','CATBTOTB',
                  'CAWTMOM'],
 
             #China
